@@ -1,6 +1,5 @@
 pragma Assertion_Policy (Check);
-
-with Ada.Command_Line;
+with CLI;
 with Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Assertions;        use Ada.Assertions;
@@ -19,8 +18,6 @@ with Ada.Strings.Unbounded.Less_Case_Insensitive;
 with GNAT.Directory_Operations; use GNAT.Directory_Operations;
 
 procedure Main is
-   -- work with command line args
-   package CLI renames Ada.Command_Line;
    -- text output
    package TIO renames Ada.Text_IO;
    -- time counting
@@ -35,11 +32,11 @@ procedure Main is
    Arg_1 : Unbounded_String;
    -- path to search
    Path_To_Search_U : Unbounded_String;
-   -- available arguments
-   type Arguments is (help, path);
+
 
    --temp
    subtype Tree_Key is Unbounded_String;
+
 
    function Key_Of (File_Record : File.File_Record_Acess) return Tree_Key is
    begin
@@ -116,24 +113,8 @@ procedure Main is
    end Walk;
 
 begin
-   -- get first argument
-   Arg_1 := To_Unbounded_String (CLI.Argument (1));
-
-   case Arguments'Value (To_String (Arg_1)) is
-      when help =>
-         TIO.Put_Line ("Help function text");
-      when path =>
-         if CLI.Argument_Count = 1 then
-            TIO.Put_Line
-              ("Path must be provided: use ""my_check path <path to search>""");
-            return;
-         end if;
-
-         Path_To_Search_U := To_Unbounded_String (CLI.Argument (2));
-      -- Parse_Dir(To_String(Path_To_Search_U));
-      when others =>
-         raise Assertion_Error; -- must be impossible to jump here
-   end case;
+   CLI.Init_Cli;
+   CLI.Capture_Arguments;
 
    Walk (".", "*.adb");
    Traverse_Tree (Tree_Root, Search_Tree.Preorder);
