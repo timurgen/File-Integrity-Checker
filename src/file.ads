@@ -16,7 +16,16 @@ package File is
    end record;
 
    type File_Record_Acess is access all File_Record;
-   subtype Tree_Key is Unbounded_String;
+   --with Dynamic_Predicate => File_Record.Path'Length > 0
+   --and then File_Record.Path'Length <= Path_Max
+   --and then File_Record.File_Name'Length > 0
+   --and then File_Record.File_Name'Length <= Name_Max;
+
+   --   procedure Parse_Dir(Path: String) with Pre => Path'Length > 0 and then Path'Length <= Path_Max;
+
+   -- procedure Store_Dir_Structure;
+
+   --procedure Restore_Dir_Structure;
 
 
 end File;
