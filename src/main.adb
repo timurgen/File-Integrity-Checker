@@ -6,7 +6,7 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Assertions;        use Ada.Assertions;
 with Ada.Directories;       use Ada.Directories;
 with Ada.IO_Exceptions;
-
+with Tree_Functions; use Tree_Functions;
 with Binary_Search_Tree;
 with File; use File;
 with Ada.Real_Time;
@@ -30,7 +30,7 @@ procedure Main is
    Start_Time   : ART.Time := ART.Clock;
    Finish_Time  : ART.Time;
    Elapsed_Time : ART.Time_Span;
-   type Tree_Key is new Unbounded_String;
+
 
    -- input arguments
    Arg_1 : Unbounded_String;
@@ -42,22 +42,12 @@ procedure Main is
    --temp
 
 
-   function Key_Of (File_Record : File.File_Record_Acess) return Tree_Key is
-   begin
-      return Tree_Key(File_Record.Path) & Dir_Separator & Tree_Key(File_Record.File_Name);
-   end Key_Of;
 
-   function Compare_Tree_Nodes (Left, Right : Tree_Key) return Boolean is
-   begin
-      return Left = Right;
-   end Compare_Tree_Nodes;
 
-   function Compare_Nodes_Less (Left, Right : Tree_Key) return Boolean is
-   begin
-      return Ada.Strings.Unbounded.Less_Case_Insensitive
-        (Left  => Unbounded_String(Left),
-         Right => Unbounded_String(Right));
-   end Compare_Nodes_Less;
+
+
+
+
 
    package Search_Tree is new Binary_Search_Tree
      (Element_Type => File.File_Record_Acess,
