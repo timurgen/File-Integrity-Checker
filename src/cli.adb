@@ -18,9 +18,8 @@ package body CLI is
 
    procedure Init_Cli is
    begin
-      GNAT.Command_Line.Define_Switch(Config => Config, Switch => "-h", Help => "Prints out this message");
       GNAT.Command_Line.Define_Switch(Config => Config, Switch => "-v", Help => "Prints out version");
-      GNAT.Command_Line.Define_Switch(Config => Config, Long_Switch => "-verbose", Help => "Prints verbose output");
+      GNAT.Command_Line.Define_Switch(Config => Config, Long_Switch => "--verbose", Help => "Prints verbose output");
    end Init_Cli;
 
    -----------------------
@@ -29,9 +28,7 @@ package body CLI is
 
    procedure Capture_Arguments is
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Capture_Arguments unimplemented");
-      raise Program_Error with "Unimplemented procedure Capture_Arguments";
+      GNAT.Command_Line.Getopt(Config);
    end Capture_Arguments;
 
 end CLI;

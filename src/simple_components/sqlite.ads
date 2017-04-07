@@ -67,316 +67,316 @@ package SQLite is
    SQLITE_NULL    : constant Datatype := 5;
 
    subtype Row_ID is Integer_64;
-------------------------------------------------------------------------
--- Data_Base -- The type encapsulating a SQLite data base
---
+   ------------------------------------------------------------------------
+   -- Data_Base -- The type encapsulating a SQLite data base
+   --
    type Data_Base is tagged private;
---
--- Open -- The database file
---
---    File_Name - To open (UTF-8 encoded)
---    Flags     - Open flags
---
--- Returns :
---
---    The data base object
---
--- Exceptions :
---
---    Data_Error - Data base error
---    Use_Error  - File open error
---
+   --
+   -- Open -- The database file
+   --
+   --    File_Name - To open (UTF-8 encoded)
+   --    Flags     - Open flags
+   --
+   -- Returns :
+   --
+   --    The data base object
+   --
+   -- Exceptions :
+   --
+   --    Data_Error - Data base error
+   --    Use_Error  - File open error
+   --
    function Open
-            (  File_Name : String;
-               Flags     : Open_Flags :=
-                              READWRITE or CREATE or FULLMUTEX
-            )  return Data_Base;
-------------------------------------------------------------------------
--- Statement -- To be executed
---
+     (  File_Name : String;
+        Flags     : Open_Flags :=
+          READWRITE or CREATE or FULLMUTEX
+       )  return Data_Base;
+   ------------------------------------------------------------------------
+   -- Statement -- To be executed
+   --
    type Statement is tagged private;
---
--- Bind -- Set a parameter of statement
---
---    Command   - The prepared command
---    Parameter - The position of
---    Value     - To be bound when missing then null is bound
---
--- The parameters to be bound are usually specified as ? in the  command
--- text  (see  Prepare). Each such parameter has to be bound to a value.
--- The position of a parameter is specified by its index,  i.e.  by  the
--- position  of  ?  in  the  command  text.  The first parameter has the
--- position 1. The variant with Value of access String type is used when
--- the  caller  takes  the  responsibility not to destroy string all the
--- time  the binding is used. In this case an attempt is made to prevent
--- extra copying of the string contents.
---
--- Exceptions :
---
---    Constraint_Error - Command or Parameter is invalid
---    Data_Error       - Data base error
---    End_Error        - Not found (table does not exist)
---    Status_Error     - Access errors
---    Use_Error        - File access related errors
---
+   --
+   -- Bind -- Set a parameter of statement
+   --
+   --    Command   - The prepared command
+   --    Parameter - The position of
+   --    Value     - To be bound when missing then null is bound
+   --
+   -- The parameters to be bound are usually specified as ? in the  command
+   -- text  (see  Prepare). Each such parameter has to be bound to a value.
+   -- The position of a parameter is specified by its index,  i.e.  by  the
+   -- position  of  ?  in  the  command  text.  The first parameter has the
+   -- position 1. The variant with Value of access String type is used when
+   -- the  caller  takes  the  responsibility not to destroy string all the
+   -- time  the binding is used. In this case an attempt is made to prevent
+   -- extra copying of the string contents.
+   --
+   -- Exceptions :
+   --
+   --    Constraint_Error - Command or Parameter is invalid
+   --    Data_Error       - Data base error
+   --    End_Error        - Not found (table does not exist)
+   --    Status_Error     - Access errors
+   --    Use_Error        - File access related errors
+   --
    procedure Bind
-             (  Command   : Statement;
-                Parameter : Positive;
-                Value     : double
-             );
+     (  Command   : Statement;
+        Parameter : Positive;
+        Value     : double
+       );
    procedure Bind
-             (  Command   : Statement;
-                Parameter : Positive;
-                Value     : int
-             );
+     (  Command   : Statement;
+        Parameter : Positive;
+        Value     : int
+       );
    procedure Bind
-             (  Command   : Statement;
-                Parameter : Positive;
-                Value     : Integer_64
-             );
+     (  Command   : Statement;
+        Parameter : Positive;
+        Value     : Integer_64
+       );
    procedure Bind
-             (  Command   : Statement;
-                Parameter : Positive;
-                Value     : String
-             );
+     (  Command   : Statement;
+        Parameter : Positive;
+        Value     : String
+       );
    procedure Bind
-             (  Command   : Statement;
-                Parameter : Positive;
-                Value     : Stream_Element_Array
-             );
+     (  Command   : Statement;
+        Parameter : Positive;
+        Value     : Stream_Element_Array
+       );
    procedure Bind
-             (  Command   : Statement;
-                Parameter : Positive;
-                Value     : access String
-             );
+     (  Command   : Statement;
+        Parameter : Positive;
+        Value     : access String
+       );
    procedure Bind
-             (  Command   : Statement;
-                Parameter : Positive;
-                Value     : access Stream_Element_Array
-             );
+     (  Command   : Statement;
+        Parameter : Positive;
+        Value     : access Stream_Element_Array
+       );
    procedure Bind
-             (  Command   : Statement;
-                Parameter : Positive;
-                Value     : chars_ptr;
-                Length    : size_t
-             );
+     (  Command   : Statement;
+        Parameter : Positive;
+        Value     : chars_ptr;
+        Length    : size_t
+       );
    procedure Bind
-             (  Command   : Statement;
-                Parameter : Positive
-             );
---
--- Column -- Get result row's column
---
---    Command  - The statement being execured
---    Position - The column number
---
--- Returns :
---
---    The value of the column Position in the current row
---
--- Exceptions :
---
---    Constraint_Error - Command is an invalid handle
---
+     (  Command   : Statement;
+        Parameter : Positive
+       );
+   --
+   -- Column -- Get result row's column
+   --
+   --    Command  - The statement being execured
+   --    Position - The column number
+   --
+   -- Returns :
+   --
+   --    The value of the column Position in the current row
+   --
+   -- Exceptions :
+   --
+   --    Constraint_Error - Command is an invalid handle
+   --
    function Column
-            (  Command  : Statement;
-               Position : Positive
-            )  return double;
+     (  Command  : Statement;
+        Position : Positive
+       )  return double;
    function Column
-            (  Command  : Statement;
-               Position : Positive
-            )  return int;
+     (  Command  : Statement;
+        Position : Positive
+       )  return int;
    function Column
-            (  Command  : Statement;
-               Position : Positive
-            )  return Integer_64;
+     (  Command  : Statement;
+        Position : Positive
+       )  return Integer_64;
    function Column
-            (  Command  : Statement;
-               Position : Positive
-            )  return String;
+     (  Command  : Statement;
+        Position : Positive
+       )  return String;
    function Column
-            (  Command  : Statement;
-               Position : Positive
-            )  return Stream_Element_Array;
---
--- Column_Count -- Get the number of columns in the result row
---
---    Command  - The statement being execured
---
--- Returns :
---
---    The number of columns
---
--- Exceptions :
---
---    Constraint_Error - Command is an invalid handle
---
+     (  Command  : Statement;
+        Position : Positive
+       )  return Stream_Element_Array;
+   --
+   -- Column_Count -- Get the number of columns in the result row
+   --
+   --    Command  - The statement being execured
+   --
+   -- Returns :
+   --
+   --    The number of columns
+   --
+   -- Exceptions :
+   --
+   --    Constraint_Error - Command is an invalid handle
+   --
    function Column_Count (Command : Statement) return Natural;
---
--- Column_Type -- Get result row's column type
---
---    Command  - The statement being execured
---    Position - The column number
---
--- Returns :
---
---    The type of the result set's column
---
--- Exceptions :
---
---    Constraint_Error - Command is an invalid handle
---
+   --
+   -- Column_Type -- Get result row's column type
+   --
+   --    Command  - The statement being execured
+   --    Position - The column number
+   --
+   -- Returns :
+   --
+   --    The type of the result set's column
+   --
+   -- Exceptions :
+   --
+   --    Constraint_Error - Command is an invalid handle
+   --
    function Column_Type
-            (  Command  : Statement;
-               Position : Positive
-            )  return Datatype;
---
--- Exec -- Execute a SQL command
---
---    Base    - The database
---    Command - To be prepared (UTF-8 encoded)
---
--- Exceptions :
---
---    Constraint_Error - Base is an invalid handle
---    Data_Error       - Data base error
---    End_Error        - Not found (table does not exist)
---    Status_Error     - Access error
---    Use_Error        - File open error
---
+     (  Command  : Statement;
+        Position : Positive
+       )  return Datatype;
+   --
+   -- Exec -- Execute a SQL command
+   --
+   --    Base    - The database
+   --    Command - To be prepared (UTF-8 encoded)
+   --
+   -- Exceptions :
+   --
+   --    Constraint_Error - Base is an invalid handle
+   --    Data_Error       - Data base error
+   --    End_Error        - Not found (table does not exist)
+   --    Status_Error     - Access error
+   --    Use_Error        - File open error
+   --
    procedure Exec (Base : Data_Base; Command : String);
---
--- Is_Null -- Check if the result row's column has a defined value
---
---    Command  - The statement being execured
---    Position - The column number
---
--- Returns :
---
---    True if the value is NULL
---
--- Exceptions :
---
---    Constraint_Error - Command is an invalid handle
---
+   --
+   -- Is_Null -- Check if the result row's column has a defined value
+   --
+   --    Command  - The statement being execured
+   --    Position - The column number
+   --
+   -- Returns :
+   --
+   --    True if the value is NULL
+   --
+   -- Exceptions :
+   --
+   --    Constraint_Error - Command is an invalid handle
+   --
    function Is_Null
-            (  Command  : Statement;
-               Position : Positive
-            )  return Boolean;
---
--- Is_Valid -- Check if the statement is valid
---
---    Command - The statement
---
--- Returns :
---
---    True if statement refers to a valid command
---
+     (  Command  : Statement;
+        Position : Positive
+       )  return Boolean;
+   --
+   -- Is_Valid -- Check if the statement is valid
+   --
+   --    Command - The statement
+   --
+   -- Returns :
+   --
+   --    True if statement refers to a valid command
+   --
    function Is_Valid (Command : Statement) return Boolean;
---
--- Last_Insert_Row -- The last inserted row
---
---    Base - The database
---
--- Since this operation is not bound to the statement it  is  inherently
--- unsafe when concurrent INSERT queries are processed.
---
--- Returns :
---
---    ID of the the last inserted row
---
+   --
+   -- Last_Insert_Row -- The last inserted row
+   --
+   --    Base - The database
+   --
+   -- Since this operation is not bound to the statement it  is  inherently
+   -- unsafe when concurrent INSERT queries are processed.
+   --
+   -- Returns :
+   --
+   --    ID of the the last inserted row
+   --
    function Last_Insert_Row (Base : Data_Base'Class) return Row_ID;
---
--- Prepare -- Create a SQL command
---
---    Base    - The database
---    Command - To be prepared (UTF-8 encoded)
---
--- Returns :
---
---    The statement object
---
--- Exceptions :
---
---    Constraint_Error - Base is an invalid handle
---    Data_Error       - Data base error
---    End_Error        - Not found (table does not exist)
---    Status_Error     - Access error
---    Use_Error        - File open error
---
+   --
+   -- Prepare -- Create a SQL command
+   --
+   --    Base    - The database
+   --    Command - To be prepared (UTF-8 encoded)
+   --
+   -- Returns :
+   --
+   --    The statement object
+   --
+   -- Exceptions :
+   --
+   --    Constraint_Error - Base is an invalid handle
+   --    Data_Error       - Data base error
+   --    End_Error        - Not found (table does not exist)
+   --    Status_Error     - Access error
+   --    Use_Error        - File open error
+   --
    function Prepare
-            (  Base    : Data_Base'Class;
-               Command : String
-            )  return Statement;
---
--- Reset -- Complete command execution, make it ready to execute again
---
---    Command - Prepared command
---
--- Exceptions :
---
---    Constraint_Error - Command is an invalid handle
---
+     (  Base    : Data_Base'Class;
+        Command : String
+       )  return Statement;
+   --
+   -- Reset -- Complete command execution, make it ready to execute again
+   --
+   --    Command - Prepared command
+   --
+   -- Exceptions :
+   --
+   --    Constraint_Error - Command is an invalid handle
+   --
    procedure Reset (Command : Statement);
---
--- Step -- Execue prepared command
---
---    Command   - The statement being execured
---    Completed - The execution state
---
--- When  the  result is False, the Command execution has been completed.
--- In  this  case the next operation should be Reset. When the result is
--- True  there  is  a  row  of  data  produced  by the command. The next
--- operation can be Step to get another row or else Reset to  reset  the
--- statement. The statement life-cycle looks like this:
---
---    declare
---       Command : Statement := Prepare (DB, "SQL command");
---    begin
---       Bind (Command, ...); -- Binding parameters
---       while Step (Command) loop
---          ... Column (Command) ... -- Taking the results out
---       end loop;
---       Reset (Command);
---
--- After Reset the parameters can be rebound before another execution of
--- the parameter is initiated by doing Step.
---
--- Returns :
---
---    False when the execution was completed. The next
---
--- Exceptions :
---
---    Constraint_Error - Command is an invalid handle
---    Data_Error       - Data base error
---    End_Error        - Not found (table does not exist)
---    Status_Error     - Access error
---    Use_Error        - File open error
---
+   --
+   -- Step -- Execue prepared command
+   --
+   --    Command   - The statement being execured
+   --    Completed - The execution state
+   --
+   -- When  the  result is False, the Command execution has been completed.
+   -- In  this  case the next operation should be Reset. When the result is
+   -- True  there  is  a  row  of  data  produced  by the command. The next
+   -- operation can be Step to get another row or else Reset to  reset  the
+   -- statement. The statement life-cycle looks like this:
+   --
+   --    declare
+   --       Command : Statement := Prepare (DB, "SQL command");
+   --    begin
+   --       Bind (Command, ...); -- Binding parameters
+   --       while Step (Command) loop
+   --          ... Column (Command) ... -- Taking the results out
+   --       end loop;
+   --       Reset (Command);
+   --
+   -- After Reset the parameters can be rebound before another execution of
+   -- the parameter is initiated by doing Step.
+   --
+   -- Returns :
+   --
+   --    False when the execution was completed. The next
+   --
+   -- Exceptions :
+   --
+   --    Constraint_Error - Command is an invalid handle
+   --    Data_Error       - Data base error
+   --    End_Error        - Not found (table does not exist)
+   --    Status_Error     - Access error
+   --    Use_Error        - File open error
+   --
    procedure Step (Command : Statement);
    function Step (Command : Statement) return Boolean;
---
--- Table_Exists -- Test if a table exists
---
---    Base - The database
---    Name - Table name
---
--- Returns :
---
---    True if the there is the table Name
---
--- Exceptions :
---
---    Constraint_Error - Base is an invalid handle
---    Data_Error       - Data base error
---    Status_Error     - Access error
---    Use_Error        - File open error
---
+   --
+   -- Table_Exists -- Test if a table exists
+   --
+   --    Base - The database
+   --    Name - Table name
+   --
+   -- Returns :
+   --
+   --    True if the there is the table Name
+   --
+   -- Exceptions :
+   --
+   --    Constraint_Error - Base is an invalid handle
+   --    Data_Error       - Data base error
+   --    Status_Error     - Access error
+   --    Use_Error        - File open error
+   --
    function Table_Exists
-            (  Base : Data_Base;
-               Name : String
-            )  return Boolean;
+     (  Base : Data_Base;
+        Name : String
+       )  return Boolean;
 private
    pragma Inline (Bind);
    pragma Inline (Column);
@@ -397,13 +397,13 @@ private
       Handle : aliased SQLite_Handle;
    end record;
    type Data_Base_Object_Ptr is access Data_Base_Object'Class;
---
--- Finalize -- Overrides Object...
---
+   --
+   -- Finalize -- Overrides Object...
+   --
    procedure Finalize (Object : in out Data_Base_Object);
 
    package Data_Base_Handles is
-      new Object.Handle (Data_Base_Object, Data_Base_Object_Ptr);
+     new Object.Handle (Data_Base_Object, Data_Base_Object_Ptr);
    type Data_Base is tagged record
       Handle : Data_Base_Handles.Handle;
    end record;
@@ -413,13 +413,13 @@ private
       Base   : Data_Base_Handles.Handle;
    end record;
    type Statement_Object_Ptr is access Statement_Object'Class;
---
--- Finalize -- Overrides Object...
---
+   --
+   -- Finalize -- Overrides Object...
+   --
    procedure Finalize (Object : in out Statement_Object);
 
    package Statement_Handles is
-      new Object.Handle (Statement_Object, Statement_Object_Ptr);
+     new Object.Handle (Statement_Object, Statement_Object_Ptr);
    type Statement is tagged record
       Handle : Statement_Handles.Handle;
    end record;

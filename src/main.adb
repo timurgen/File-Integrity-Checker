@@ -1,51 +1,36 @@
 pragma Assertion_Policy (Check);
 
-with Ada.Command_Line;
+with CLI; use CLI;
+with Db;
+
 with Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded.Less_Case_Insensitive;
+with Ada.Strings.Fixed.Less_Case_Insensitive;
+
 with Ada.Assertions;        use Ada.Assertions;
+
 with Ada.Directories;       use Ada.Directories;
-with Ada.IO_Exceptions;
+with GNAT.Directory_Operations; use GNAT.Directory_Operations;
+with File; use File;
+
 with Tree_Functions; use Tree_Functions;
 with Binary_Search_Tree;
-with File; use File;
-with Ada.Real_Time;
 
-with Ada.Strings.Fixed;
 with MD5.Driver;
-with Ada.Strings.Fixed.Less_Case_Insensitive;
 with Ada.Calendar;
-with Ada.Strings.Unbounded.Less_Case_Insensitive;
-with GNAT.Directory_Operations; use GNAT.Directory_Operations;
-with SQLite;
+with SQLite; use SQLite;
+
+with Ada.IO_Exceptions;
+
 procedure Main is
-   -- work with command line args
-   package CLI renames Ada.Command_Line;
+
+
+
+
    -- text output
    package TIO renames Ada.Text_IO;
-   -- time counting
-   package ART renames Ada.Real_Time;
-
-   -- elapsed time measure
-   Start_Time   : ART.Time := ART.Clock;
-   Finish_Time  : ART.Time;
-   Elapsed_Time : ART.Time_Span;
-
-
-   -- input arguments
-   Arg_1 : Unbounded_String;
-   -- path to search
-   Path_To_Search_U : Unbounded_String;
-   -- available arguments
-   type Arguments is (help, path);
-
-   --temp
-
-
-
-
-
-
 
 
 
@@ -106,50 +91,20 @@ procedure Main is
       Search (Name, Pattern, (others => True), Process_Item'Access);
       Search (Name, "", (Directory => True, others => False), Walk'Access);
    end Walk;
-
+   Db : Data_Base;
 begin
-   if CLI.Argument_Count = 0 then
-      TIO.Put_Line ("Help function text");
-      return;
-   end if;
-
-   -- get first argument
-   Arg_1 := To_Unbounded_String (CLI.Argument (1));
-
-   case Arguments'Value (To_String (Arg_1)) is
-      when help =>
-         TIO.Put_Line ("Help function text");
-      when path =>
-         if CLI.Argument_Count = 1 then
-            TIO.Put_Line
-              ("Path must be provided: use ""my_check path <path to search>""");
-            return;
-         end if;
-
-         Path_To_Search_U := To_Unbounded_String (CLI.Argument (2));
-         -- Parse_Dir(To_String(Path_To_Search_U));
-      when others =>
-         raise Assertion_Error; -- must be impossible to jump here
-   end case;
-
-   Walk (".", "*.adb");
-   Traverse_Tree (Tree_Root, Search_Tree.Preorder);
-   Finish_Time  := ART.Clock;
-   Elapsed_Time := ART."-" (Finish_Time, Start_Time);
-   TIO.New_Line;
-   TIO.Put_Line (ART.To_Duration (Elapsed_Time)'Img);
-   declare
-      Tmp : File.File_Record_Acess := Search_Tree.Retrieve(Tree => Tree_Root,
-                                                           Key  => To_Unbounded_String("C:\Users\80473\Dropbox\books\IT_books_and_papers\Ada\Ada-univercity\Ada 001\lectures-01_Overview-04_Ten_Bouncing_Balls\main.adb"));
-   begin
-      TIO.Put_Line(To_String(Tmp.File_Name));
-   end;
+   Init_Cli;
+   Capture_Arguments;
 
 
+   --     Walk (".", "*.adb");
+   --     Traverse_Tree (Tree_Root, Search_Tree.Preorder);
+   --     declare
+   --        Tmp : File.File_Record_Acess := Search_Tree.Retrieve(Tree => Tree_Root,
+   --                                                             Key  => To_Unbounded_String("C:\Users\80473\Dropbox\books\IT_books_and_papers\Ada\Ada-univercity\Ada 001\lectures-01_Overview-04_Ten_Bouncing_Balls\main.adb"));
+   --     begin
+   --        TIO.Put_Line(To_String(Tmp.File_Name));
+   --     end;
 
-   --  exception
-   --     when Constraint_Error =>
-   --        TIO.Put_Line ("You must provide at least one valid argument");
-   --        TIO.Put_Line ("Valid arguments are: help, path <path to search>");
-   --        return;
+
 end Main;
